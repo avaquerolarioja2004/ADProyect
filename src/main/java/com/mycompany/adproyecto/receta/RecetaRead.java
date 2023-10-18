@@ -4,12 +4,11 @@
  */
 package com.mycompany.adproyecto.receta;
 
-import com.mycompany.adproyecto.libroReceta.*;
 import com.mycompany.adproyecto.Main;
-import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
-import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
-import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
-import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
+import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -19,13 +18,13 @@ import javax.swing.DefaultListModel;
  * @author mrpox
  */
 public class RecetaRead extends javax.swing.JFrame {
-
-    private BufferedDAOLibroRecetas bLR;
-    private BinaryDAOLibroRecetas dLR;
-    private ObjectDAOLibroRecetas oLR;
-    private File file;
-    private RADAOLibroRecetas rLR;
+    
+    private BufferedDAOReceta bR;
+    private BinaryDAOReceta dR;
+    private ObjectDAOReceta oR;
     private char typeData;
+    private File file;
+    private RADAOReceta rR;
 
     /**
      * Creates new form LibroRecetasRead
@@ -35,11 +34,11 @@ public class RecetaRead extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
     }
-
+    
     public void setFile(File file) {
         this.file = file;
     }
-
+    
     public void setTypeData(char typeData) {
         this.typeData = typeData;
     }
@@ -53,10 +52,10 @@ public class RecetaRead extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buscarButtonISBN = new javax.swing.JButton();
+        buscarButtonID = new javax.swing.JButton();
         buscarButtonAll = new javax.swing.JButton();
         textConsultaAll = new javax.swing.JLabel();
-        isbn = new javax.swing.JTextField();
+        id = new javax.swing.JTextField();
         textResultados = new javax.swing.JLabel();
         textBusqueda = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -65,10 +64,10 @@ public class RecetaRead extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        buscarButtonISBN.setText("BUSCAR");
-        buscarButtonISBN.addActionListener(new java.awt.event.ActionListener() {
+        buscarButtonID.setText("BUSCAR");
+        buscarButtonID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscarButtonISBNActionPerformed(evt);
+                buscarButtonIDActionPerformed(evt);
             }
         });
 
@@ -86,7 +85,7 @@ public class RecetaRead extends javax.swing.JFrame {
         textResultados.setText("RESULTADOS:");
 
         textBusqueda.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        textBusqueda.setText("Busqueda por ISBN:");
+        textBusqueda.setText("Busqueda por ID:");
 
         jScrollPane2.setViewportView(list);
 
@@ -106,7 +105,7 @@ public class RecetaRead extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                             .addGap(71, 71, 71)
-                            .addComponent(buscarButtonISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(buscarButtonID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addContainerGap()
                             .addComponent(backButton))
@@ -119,7 +118,7 @@ public class RecetaRead extends javax.swing.JFrame {
                                 .addComponent(textConsultaAll))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(264, 264, 264)
-                        .addComponent(isbn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(textResultados)
@@ -129,7 +128,7 @@ public class RecetaRead extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(32, 32, 32)
                     .addComponent(textBusqueda)
-                    .addContainerGap(598, Short.MAX_VALUE)))
+                    .addContainerGap(625, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,9 +138,9 @@ public class RecetaRead extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(isbn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
-                        .addComponent(buscarButtonISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(buscarButtonID, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(60, 60, 60)
                         .addComponent(textConsultaAll, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -161,7 +160,7 @@ public class RecetaRead extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buscarButtonISBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonISBNActionPerformed
+    private void buscarButtonIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonIDActionPerformed
         // TODO add your handling code here:
         DefaultListModel<String> nuevoModelo = new DefaultListModel<>();
         if (file.length() < 1) {
@@ -174,29 +173,29 @@ public class RecetaRead extends javax.swing.JFrame {
             list.repaint();
         }
         String date = "";
-        LibroRecetas out = null;
-        int isbnIntroducido;
-        if (this.isbn.getText().equals("")) {
-            isbnIntroducido = 0;
+        Receta out = null;
+        int idIntroducido;
+        if (this.id.getText().equals("")) {
+            idIntroducido = 0;
         } else {
-            isbnIntroducido = Integer.parseInt(this.isbn.getText());
+            idIntroducido = Integer.parseInt(this.id.getText());
         }
         switch (typeData) {
             case 'B' -> {
-                bLR = new BufferedDAOLibroRecetas(file.getAbsolutePath());
-                out = bLR.consultaId(isbnIntroducido);
+                bR = new BufferedDAOReceta(file.getAbsolutePath());
+                out = bR.consultaId(idIntroducido);
             }
             case 'D' -> {
-                dLR = new BinaryDAOLibroRecetas(file.getAbsolutePath());
-                out = dLR.consultaId(isbnIntroducido);
+                dR = new BinaryDAOReceta(file.getAbsolutePath());
+                out = dR.consultaId(idIntroducido);
             }
             case 'O' -> {
-                oLR = new ObjectDAOLibroRecetas(file.getAbsolutePath());
-                out = oLR.consultaId(isbnIntroducido);
+                oR = new ObjectDAOReceta(file.getAbsolutePath());
+                out = oR.consultaId(idIntroducido);
             }
             case 'R' -> {
-                rLR = new RADAOLibroRecetas(file.getAbsolutePath());
-                out = rLR.consultaId(isbnIntroducido);
+                rR = new RADAOReceta(file.getAbsolutePath());
+                out = rR.consultaId(idIntroducido);
             }
             case 'X' -> {
             }
@@ -206,22 +205,26 @@ public class RecetaRead extends javax.swing.JFrame {
             nuevoModelo.addElement("Resultado no encontrado");
         } else {
             nuevoModelo.addElement("Libro Recetas:");
-            nuevoModelo.addElement("ISBN: " + out.getIsbn());
+            nuevoModelo.addElement("ID: " + out.getIdReceta());
             nuevoModelo.addElement("Nombre: " + out.getNombre());
-            nuevoModelo.addElement("Número de páginas: " + out.getNumPags());
-            if (out.getFechaPublicacion() != null) {
-                date = out.getFechaPublicacion().toString();
+            if(out.getIdLibro()==0){
+                    nuevoModelo.addElement("ID Libro de Recetas: " + null);
+                }else{
+                    nuevoModelo.addElement("ID Libro de Recetas: " + out.getIdLibro());
+                }
+            if (out.getFechInvención() != null) {
+                date = out.getFechInvención().toString();
             }
-            nuevoModelo.addElement("Fecha de publicación: " + date);
-            nuevoModelo.addElement("Digital: " + out.getDigital());
+            nuevoModelo.addElement("Fecha de creación: " + date);
+            nuevoModelo.addElement("Vegana: " + out.getVegana());
         }
         list.setModel(nuevoModelo);
         list.repaint();
-    }//GEN-LAST:event_buscarButtonISBNActionPerformed
+    }//GEN-LAST:event_buscarButtonIDActionPerformed
 
     private void buscarButtonAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonAllActionPerformed
         // TODO add your handling code here:
-        ArrayList<LibroRecetas> listaLr = null;
+        ArrayList<Receta> listaR = null;
         String date = "";
         DefaultListModel<String> nuevoModelo = new DefaultListModel<>();
         if (file.length() < 1) {
@@ -235,38 +238,43 @@ public class RecetaRead extends javax.swing.JFrame {
         }
         switch (typeData) {
             case 'B' -> {
-                bLR = new BufferedDAOLibroRecetas(file.getAbsolutePath());
-                listaLr = bLR.consultaAll();
+                bR = new BufferedDAOReceta(file.getAbsolutePath());
+                listaR = bR.consultaAll();
             }
             case 'D' -> {
-                dLR = new BinaryDAOLibroRecetas(file.getAbsolutePath());
-                listaLr = dLR.consultaAll();
+                dR = new BinaryDAOReceta(file.getAbsolutePath());
+                listaR = dR.consultaAll();
             }
             case 'O' -> {
-                oLR = new ObjectDAOLibroRecetas(file.getAbsolutePath());
-                listaLr = oLR.consultaAll();
+                oR = new ObjectDAOReceta(file.getAbsolutePath());
+                listaR = oR.consultaAll();
             }
             case 'R' -> {
-                rLR = new RADAOLibroRecetas(file.getAbsolutePath());
-                listaLr = rLR.consultaAll();
+                rR = new RADAOReceta(file.getAbsolutePath());
+                listaR = rR.consultaAll();
             }
             case 'X' -> {
             }
         }
         nuevoModelo.clear();
-        if (listaLr == null) {
+        if (listaR == null) {
             nuevoModelo.addElement("No hay elementos o hubo un error");
         } else {
-            for (LibroRecetas next : listaLr) {
+            for (Receta out : listaR) {
+                date="";
                 nuevoModelo.addElement("Libro Recetas:");
-                nuevoModelo.addElement("ISBN: " + next.getIsbn());
-                nuevoModelo.addElement("Nombre: " + next.getNombre());
-                nuevoModelo.addElement("Número de páginas: " + next.getNumPags());
-                if (next.getFechaPublicacion() != null) {
-                    date = next.getFechaPublicacion().toString();
+                nuevoModelo.addElement("ID: " + out.getIdReceta());
+                nuevoModelo.addElement("Nombre: " + out.getNombre());
+                if(out.getIdLibro()==0){
+                    nuevoModelo.addElement("ID Libro de Recetas: " + null);
+                }else{
+                    nuevoModelo.addElement("ID Libro de Recetas: " + out.getIdLibro());
                 }
-                nuevoModelo.addElement("Fecha de publicación: " + date);
-                nuevoModelo.addElement("Digital: " + next.getDigital());
+                if (out.getFechInvención() != null) {
+                    date = out.getFechInvención().toString();
+                }
+                nuevoModelo.addElement("Fecha de creación: " + date);
+                nuevoModelo.addElement("Vegana: " + out.getVegana());
                 nuevoModelo.addElement("\n");
             }
         }
@@ -308,7 +316,7 @@ public class RecetaRead extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -320,8 +328,8 @@ public class RecetaRead extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton buscarButtonAll;
-    private javax.swing.JButton buscarButtonISBN;
-    private javax.swing.JTextField isbn;
+    private javax.swing.JButton buscarButtonID;
+    private javax.swing.JTextField id;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> list;
     private javax.swing.JLabel textBusqueda;

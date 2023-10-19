@@ -23,6 +23,16 @@ public class LibroRecetas implements Serializable{
         this.nombre = nombre;
     }
 
+    public LibroRecetas(int isbn, String nombre, int numPags,Date fechaPublicacion, boolean digital) {
+        this.isbn = isbn;
+        this.nombre = nombre;
+        this.fechaPublicacion = fechaPublicacion;
+        this.numPags = numPags;
+        this.digital = digital;
+    }
+    
+    
+
     public LibroRecetas() {
     }
 
@@ -64,9 +74,9 @@ public class LibroRecetas implements Serializable{
 
     public String getDigital() {
         if(digital){
-            return "Si";
+            return "si";
         }else{
-            return "No";
+            return "no";
         }
     }
     
@@ -79,6 +89,10 @@ public class LibroRecetas implements Serializable{
             fecha=this.fechaPublicacion.toString();
         }
         return "LIBRO DE RECETAS:\nISBN: "+this.getIsbn()+"\nNombre: "+this.getNombre()+"\nNúmero de paginas: "+this.numPags+"\nFecha de publicación: "+fecha+"\nDigital: "+this.getDigital();
+    }
+
+    public boolean isDigital() {
+        return digital;
     }
     
 }

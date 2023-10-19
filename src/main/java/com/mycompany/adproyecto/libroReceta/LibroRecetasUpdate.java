@@ -7,6 +7,7 @@ package com.mycompany.adproyecto.libroReceta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.DOMDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
 import java.io.File;
@@ -30,6 +31,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
     private File file;
     private RADAOLibroRecetas rLR;
     private final SimpleDateFormat sdf;
+    private DOMDAOLibroRecetas domLR;
 
     /**
      * Creates new form LibroRecetaUpdateç
@@ -37,7 +39,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
     public LibroRecetasUpdate() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        this.sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
         this.sdf.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
         this.setResizable(false);
     }
@@ -215,7 +217,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
             case 'B' -> {
                 bLR = new BufferedDAOLibroRecetas(file.getAbsolutePath());
                 libroRAux = bLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
+                if (libroRAux!=null) {
                     if (bLR.modificar(libroRAux, libroRIn)) {
                         JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -231,7 +233,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
             case 'D' -> {
                 dLR = new BinaryDAOLibroRecetas(file.getAbsolutePath());
                 libroRAux = dLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
+                if (libroRAux!=null) {
                     if (dLR.modificar(libroRAux, libroRIn)) {
                         JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -247,7 +249,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
             case 'O' -> {
                 oLR = new ObjectDAOLibroRecetas(file.getAbsolutePath());
                 libroRAux = oLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
+                if (libroRAux!=null) {
                     if (oLR.modificar(libroRAux, libroRIn)) {
                         JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -263,7 +265,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
             case 'R' -> {
                 rLR = new RADAOLibroRecetas(file.getAbsolutePath());
                 libroRAux = rLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
+                if (libroRAux!=null) {
                     if (rLR.modificar(libroRAux, libroRIn)) {
                         JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
@@ -277,6 +279,20 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
                 }
             }
             case 'X' -> {
+                domLR = new DOMDAOLibroRecetas(file.getAbsolutePath());
+                libroRAux = domLR.consultaId(isbnNum);
+                if (libroRAux!=null) {
+                    if (domLR.modificar(libroRAux, libroRIn)) {
+                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
+                                "OK", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "ERROR EN LA ACTUALIZACIÓN",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO A ACTUALIZACIAR NO SE HA ENCONTRADO",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_updateButtonActionPerformed
@@ -312,15 +328,9 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LibroRecetasUpdate().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new LibroRecetasUpdate().setVisible(true);
         });
-    }
-
-    private boolean testLibroIfExists(LibroRecetas libroRAux) {
-        return libroRAux != null;
     }
 
     private LibroRecetas putData(LibroRecetas libroR) {

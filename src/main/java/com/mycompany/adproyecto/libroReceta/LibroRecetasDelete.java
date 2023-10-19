@@ -7,10 +7,18 @@ package com.mycompany.adproyecto.libroReceta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.DOMDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
+import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.DOMDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
+import com.mycompany.adproyecto.receta.Receta;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.TimeZone;
 import javax.swing.JOptionPane;
@@ -20,14 +28,21 @@ import javax.swing.JOptionPane;
  * @author mrpox
  */
 public class LibroRecetasDelete extends javax.swing.JFrame {
-    
+
+    private BufferedDAOReceta bR;
+    private BinaryDAOReceta dR;
+    private ObjectDAOReceta oR;
+    private char typeData;
+    private File file;
+    private File fileR;
+    private RADAOReceta rR;
+    private final SimpleDateFormat sdf;
     private BufferedDAOLibroRecetas bLR;
     private BinaryDAOLibroRecetas dLR;
     private ObjectDAOLibroRecetas oLR;
-    private char typeData;
-    private File file;
     private RADAOLibroRecetas rLR;
-    private final SimpleDateFormat sdf;
+    private DOMDAOLibroRecetas domLR;
+    private DOMDAOReceta domR;
 
     /**
      * Creates new form LibroRecetasDelete
@@ -39,13 +54,17 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
         this.sdf.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
         this.setResizable(false);
     }
-    
+
     public void setTypeData(char typeData) {
         this.typeData = typeData;
     }
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public void setFileR(File fileR) {
+        this.fileR = fileR;
     }
 
     /**
@@ -128,8 +147,9 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
 
     private void buttonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBorrarActionPerformed
         // TODO add your handling code here:
-        
+        ArrayList<Receta> listaRecetas = new ArrayList<>();
         LibroRecetas libroRAux = null;
+        Receta auxUpdate = null;
         int isbnNum;
         if (textIsbn.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "ALGUN CAMPO REQUERIDO ES INCORRECTO",
@@ -140,13 +160,23 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
         switch (typeData) {
             case 'B' -> {
                 bLR = new BufferedDAOLibroRecetas(file.getAbsolutePath());
+                bR = new BufferedDAOReceta(fileR.getAbsolutePath());
                 libroRAux = bLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if(bLR.baja(libroRAux)!=null){
+                if (libroRAux != null) {
+                    if (bLR.baja(libroRAux) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                        // Si el borrado funciona llamar a modificar de recetas para setear los libros con el id de libro a null
-                    }else{
+                        if (fileR.length() > 0) {
+                            listaRecetas = bR.consultaAll();
+                            for (Receta next : listaRecetas) {
+                                if (next.getIdReceta() == isbnNum) {
+                                    auxUpdate = next;
+                                    auxUpdate.setIdLibro(0);
+                                    bR.modificar(next, auxUpdate);
+                                }
+                            }
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -157,12 +187,23 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
             }
             case 'D' -> {
                 dLR = new BinaryDAOLibroRecetas(file.getAbsolutePath());
+                dR = new BinaryDAOReceta(fileR.getAbsolutePath());
                 libroRAux = dLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if(dLR.baja(libroRAux)!=null){
+                if (libroRAux != null) {
+                    if (dLR.baja(libroRAux) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                        if (fileR.length() > 0) {
+                            listaRecetas = dR.consultaAll();
+                            for (Receta next : listaRecetas) {
+                                if (next.getIdReceta() == isbnNum) {
+                                    auxUpdate = next;
+                                    auxUpdate.setIdLibro(0);
+                                    dR.modificar(next, auxUpdate);
+                                }
+                            }
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -173,12 +214,23 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
             }
             case 'O' -> {
                 oLR = new ObjectDAOLibroRecetas(file.getAbsolutePath());
+                oR = new ObjectDAOReceta(fileR.getAbsolutePath());
                 libroRAux = oLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if(oLR.baja(libroRAux)!=null){
+                if (libroRAux != null) {
+                    if (oLR.baja(libroRAux) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                        if (fileR.length() > 0) {
+                            listaRecetas = oR.consultaAll();
+                            for (Receta next : listaRecetas) {
+                                if (next.getIdReceta() == isbnNum) {
+                                    auxUpdate = next;
+                                    auxUpdate.setIdLibro(0);
+                                    oR.modificar(next, auxUpdate);
+                                }
+                            }
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -189,12 +241,23 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
             }
             case 'R' -> {
                 rLR = new RADAOLibroRecetas(file.getAbsolutePath());
+                rR = new RADAOReceta(fileR.getAbsolutePath());
                 libroRAux = rLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if(rLR.baja(libroRAux)!=null){
+                if (libroRAux != null) {
+                    if (rLR.baja(libroRAux) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                        if (fileR.length() > 0) {
+                            listaRecetas = rR.consultaAll();
+                            for (Receta next : listaRecetas) {
+                                if (next.getIdReceta() == isbnNum) {
+                                    auxUpdate = next;
+                                    auxUpdate.setIdLibro(0);
+                                    rR.modificar(next, auxUpdate);
+                                }
+                            }
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -204,6 +267,32 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
                 }
             }
             case 'X' -> {
+                domLR = new DOMDAOLibroRecetas(file.getAbsolutePath());
+                domR = new DOMDAOReceta(fileR.getAbsolutePath());
+                libroRAux = domLR.consultaId(isbnNum);
+                if (libroRAux != null) {
+                    if (domLR.baja(libroRAux) != null) {
+                        JOptionPane.showMessageDialog(null, "BORRADO DEL LIBRO DE RECETAS CORRECTA",
+                                "OK", JOptionPane.INFORMATION_MESSAGE);
+                        if (fileR.length() > 0) {
+                            listaRecetas = rR.consultaAll();
+
+                            for (Receta next : listaRecetas) {
+                                if (next.getIdReceta() == isbnNum) {
+                                    auxUpdate = next;
+                                    auxUpdate.setIdLibro(0);
+                                    rR.modificar(next, auxUpdate);
+                                }
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO A BORRAR NO SE HA ENCONTRADO",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_buttonBorrarActionPerformed
@@ -242,7 +331,7 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private boolean testLibroIfExists(LibroRecetas libroRAux) {
         return libroRAux != null;
     }

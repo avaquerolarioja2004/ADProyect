@@ -7,6 +7,7 @@ package com.mycompany.adproyecto.libroReceta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.DOMDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
 import java.io.File;
@@ -25,6 +26,7 @@ public class LibroRecetasRead extends javax.swing.JFrame {
     private File file;
     private RADAOLibroRecetas rLR;
     private char typeData;
+    private DOMDAOLibroRecetas domLR;
 
     /**
      * Creates new form LibroRecetasRead
@@ -172,7 +174,7 @@ public class LibroRecetasRead extends javax.swing.JFrame {
             list.setModel(nuevoModelo);
             list.repaint();
         }
-        String date = "";
+        String date = "null";
         LibroRecetas out = null;
         int isbnIntroducido;
         if (this.isbn.getText().equals("")) {
@@ -198,6 +200,8 @@ public class LibroRecetasRead extends javax.swing.JFrame {
                 out = rLR.consultaId(isbnIntroducido);
             }
             case 'X' -> {
+                domLR = new DOMDAOLibroRecetas(file.getAbsolutePath());
+                out = domLR.consultaId(isbnIntroducido);
             }
         }
         nuevoModelo = new DefaultListModel<>();
@@ -221,7 +225,7 @@ public class LibroRecetasRead extends javax.swing.JFrame {
     private void buscarButtonAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonAllActionPerformed
         // TODO add your handling code here:
         ArrayList<LibroRecetas> listaLr = null;
-        String date = "";
+        String date;
         DefaultListModel<String> nuevoModelo = new DefaultListModel<>();
         if (file.length() < 1) {
             nuevoModelo.addElement("ARCHIVO VACIO");
@@ -250,6 +254,8 @@ public class LibroRecetasRead extends javax.swing.JFrame {
                 listaLr = rLR.consultaAll();
             }
             case 'X' -> {
+                domLR = new DOMDAOLibroRecetas(file.getAbsolutePath());
+                listaLr = domLR.consultaAll();
             }
         }
         nuevoModelo.clear();
@@ -257,6 +263,7 @@ public class LibroRecetasRead extends javax.swing.JFrame {
             nuevoModelo.addElement("No hay elementos o hubo un error");
         } else {
             for (LibroRecetas next : listaLr) {
+                date="null";
                 nuevoModelo.addElement("Libro Recetas:");
                 nuevoModelo.addElement("ISBN: " + next.getIsbn());
                 nuevoModelo.addElement("Nombre: " + next.getNombre());

@@ -10,6 +10,10 @@ import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
+import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,13 +28,18 @@ import javax.swing.JOptionPane;
  */
 public class RecetaUpdate extends javax.swing.JFrame {
 
+    private BufferedDAOReceta bR;
+    private BinaryDAOReceta dR;
+    private ObjectDAOReceta oR;
+    private char typeData;
+    private File file;
+    private File fileLr;
+    private RADAOReceta rR;
+    private final SimpleDateFormat sdf;
     private BufferedDAOLibroRecetas bLR;
     private BinaryDAOLibroRecetas dLR;
     private ObjectDAOLibroRecetas oLR;
-    private char typeData;
-    private File file;
     private RADAOLibroRecetas rLR;
-    private final SimpleDateFormat sdf;
 
     /**
      * Creates new form LibroRecetaUpdateç
@@ -38,7 +47,7 @@ public class RecetaUpdate extends javax.swing.JFrame {
     public RecetaUpdate() {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+        this.sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
         this.sdf.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
         this.setResizable(false);
     }
@@ -49,6 +58,10 @@ public class RecetaUpdate extends javax.swing.JFrame {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public void setFileLr(File file) {
+        this.fileLr = file;
     }
 
     /**
@@ -62,15 +75,15 @@ public class RecetaUpdate extends javax.swing.JFrame {
 
         backButton = new javax.swing.JButton();
         textBusqueda = new javax.swing.JLabel();
-        isbn = new javax.swing.JTextField();
+        textId = new javax.swing.JTextField();
         textName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        textNumPags = new javax.swing.JTextField();
+        textISBNLibro = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         textDate = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        isDigitalorNot = new javax.swing.JToggleButton();
+        isVegana = new javax.swing.JToggleButton();
         jLabel6 = new javax.swing.JLabel();
         updateButton = new javax.swing.JButton();
 
@@ -84,7 +97,7 @@ public class RecetaUpdate extends javax.swing.JFrame {
         });
 
         textBusqueda.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        textBusqueda.setText("ISBN del Libro a  Editar:");
+        textBusqueda.setText("ID del Libro a  Editar:");
 
         textName.setToolTipText("");
 
@@ -92,17 +105,17 @@ public class RecetaUpdate extends javax.swing.JFrame {
         jLabel2.setText("NOMBRE");
 
         jLabel3.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        jLabel3.setText("NÚMERO DE PÁGINAS");
+        jLabel3.setText("ISBN DEL LIBRO");
 
-        textNumPags.setToolTipText("");
+        textISBNLibro.setToolTipText("");
 
         jLabel4.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        jLabel4.setText("FECHA DE PUBLICACIÓN");
+        jLabel4.setText("FECHA DE CREACIÓN");
 
         textDate.setToolTipText("");
 
         jLabel5.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        jLabel5.setText("DIGITAL");
+        jLabel5.setText("VEGANA");
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 0, 0));
@@ -130,7 +143,7 @@ public class RecetaUpdate extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textNumPags, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(textISBNLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -138,16 +151,16 @@ public class RecetaUpdate extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(textBusqueda)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(isbn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(textId, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(207, 207, 207))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 246, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 281, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(textDate)
-                                    .addComponent(isDigitalorNot, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                                    .addComponent(isVegana, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
                                     .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
@@ -161,7 +174,7 @@ public class RecetaUpdate extends javax.swing.JFrame {
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isbn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textId, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
@@ -175,13 +188,13 @@ public class RecetaUpdate extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addComponent(jLabel4))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(textNumPags, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textISBNLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5)
-                    .addComponent(isDigitalorNot, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(isVegana, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(55, 55, 55)
                 .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(40, Short.MAX_VALUE))
@@ -199,82 +212,141 @@ public class RecetaUpdate extends javax.swing.JFrame {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-        LibroRecetas libroRIn = null;
         LibroRecetas libroRAux = null;
-        int isbnNum;
-        if (isbn.getText().isEmpty() || textName.getText().isEmpty()) {
+        Receta recetaAux = null;
+        Receta recetaIn = null;
+        int id;
+        if (textId.getText().length() < 1 || textName.getText().length() < 1) {
             JOptionPane.showMessageDialog(null, "ALGUN CAMPO REQUERIDO ES INCORRECTO",
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        isbnNum = Integer.parseInt(isbn.getText());
-        libroRIn = putData(libroRIn);
-        if (libroRIn == null) {
-            return;
-        }
+        id = Integer.parseInt(textId.getText());
+
         switch (typeData) {
             case 'B' -> {
-                bLR = new BufferedDAOLibroRecetas(file.getAbsolutePath());
-                libroRAux = bLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if (bLR.modificar(libroRAux, libroRIn)) {
-                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
+                bR = new BufferedDAOReceta(file.getAbsolutePath());
+                bLR = new BufferedDAOLibroRecetas(fileLr.getAbsolutePath());
+                
+                if (!textISBNLibro.getText().isBlank()) {
+                    libroRAux = bLR.consultaId(Integer.parseInt(textISBNLibro.getText()));
+                    
+                    if (libroRAux == null) {
+                        JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO NO SE HA ENCONTRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                }
+                recetaIn = bR.consultaId(id);
+                if (recetaIn != null) {
+                    recetaAux = putData(recetaAux);
+                    if (bR.modificar(recetaIn, recetaAux)) {
+                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DE LA RECETA CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN LA ACTUALIZACIÓN",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO A ACTUALIZAR NO SE HA ENCONTRADO",
+                    JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A ACTUALIZAR NO SE HA ENCONTRADO",
                             "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
             }
             case 'D' -> {
-                dLR = new BinaryDAOLibroRecetas(file.getAbsolutePath());
-                libroRAux = dLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if (dLR.modificar(libroRAux, libroRIn)) {
-                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
+                dR = new BinaryDAOReceta(file.getAbsolutePath());
+                dLR = new BinaryDAOLibroRecetas(fileLr.getAbsolutePath());
+                
+                if (!textISBNLibro.getText().isBlank()) {
+                    libroRAux = dLR.consultaId(Integer.parseInt(textISBNLibro.getText()));
+                    
+                    if (libroRAux == null) {
+                        JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO NO SE HA ENCONTRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                }
+                recetaIn = dR.consultaId(id);
+                if (recetaIn != null) {
+                    recetaAux = putData(recetaAux);
+                    if (dR.modificar(recetaIn, recetaAux)) {
+                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DE LA RECETA CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN LA ACTUALIZACIÓN",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO A ACTUALIZACIAR NO SE HA ENCONTRADO",
+                    JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A ACTUALIZAR NO SE HA ENCONTRADO",
                             "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
             case 'O' -> {
-                oLR = new ObjectDAOLibroRecetas(file.getAbsolutePath());
-                libroRAux = oLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if (oLR.modificar(libroRAux, libroRIn)) {
-                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
+                oR = new ObjectDAOReceta(file.getAbsolutePath());
+                oLR = new ObjectDAOLibroRecetas(fileLr.getAbsolutePath());
+                
+                if (!textISBNLibro.getText().isBlank()) {
+                    libroRAux = oLR.consultaId(Integer.parseInt(textISBNLibro.getText()));
+                    
+                    if (libroRAux == null) {
+                        JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO NO SE HA ENCONTRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                }
+                recetaIn = oR.consultaId(id);
+                if (recetaIn != null) {
+                    recetaAux = putData(recetaAux);
+                    if (oR.modificar(recetaIn, recetaAux)) {
+                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DE LA RECETA CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN LA ACTUALIZACIÓN",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO A ACTUALIZACIAR NO SE HA ENCONTRADO",
+                    JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A ACTUALIZAR NO SE HA ENCONTRADO",
                             "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
             case 'R' -> {
-                rLR = new RADAOLibroRecetas(file.getAbsolutePath());
-                libroRAux = rLR.consultaId(isbnNum);
-                if (testLibroIfExists(libroRAux)) {
-                    if (rLR.modificar(libroRAux, libroRIn)) {
-                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DEL LIBRO DE RECETAS CORRECTA",
+                rR = new RADAOReceta(file.getAbsolutePath());
+                rLR = new RADAOLibroRecetas(fileLr.getAbsolutePath());
+                
+                if (!textISBNLibro.getText().isBlank()) {
+                    libroRAux = rLR.consultaId(Integer.parseInt(textISBNLibro.getText()));
+                    
+                    if (libroRAux == null) {
+                        JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO NO SE HA ENCONTRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                }
+                recetaIn = rR.consultaId(id);
+                if (recetaIn != null) {
+                    recetaAux = putData(recetaAux);
+                    if (rR.modificar(recetaIn, recetaAux)) {
+                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DE LA RECETA CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN LA ACTUALIZACIÓN",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO A ACTUALIZACIAR NO SE HA ENCONTRADO",
+                    JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A ACTUALIZAR NO SE HA ENCONTRADO",
                             "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
             case 'X' -> {
@@ -332,34 +404,31 @@ public class RecetaUpdate extends javax.swing.JFrame {
         });
     }
 
-    private boolean testLibroIfExists(LibroRecetas libroRAux) {
-        return libroRAux != null;
-    }
-
-    private LibroRecetas putData(LibroRecetas libroR) {
-        libroR = new LibroRecetas(Integer.parseInt(isbn.getText()), textName.getText());
-        libroR.setNombre(textName.getText());
-        libroR.setDigital(isDigitalorNot.isSelected());
-        if (textNumPags.getText().length() >= 1) {
-            libroR.setNumPags(Integer.parseInt(textNumPags.getText()));
+    private Receta putData(Receta receta) {
+        receta = new Receta(Integer.parseInt(textId.getText()), textName.getText());
+        receta.setVegana(isVegana.isSelected());
+        if(textISBNLibro.getText().isBlank()){
+            receta.setIdLibro(0);
+        }else{
+            receta.setIdLibro(Integer.parseInt(textISBNLibro.getText()));
         }
+
         if (!textDate.getText().isEmpty()) {
             try {
                 Date d = sdf.parse(textDate.getText());
-                libroR.setFechaPublicacion(d);
+                receta.setFechInvención(d);
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "FECHA MAL PUESTA",
+                JOptionPane.showMessageDialog(null, "FECHA MAL PUESTA\nFormato: dd/mm/yyyy",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
         }
-        return libroR;
+        return receta;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
-    private javax.swing.JToggleButton isDigitalorNot;
-    private javax.swing.JTextField isbn;
+    private javax.swing.JToggleButton isVegana;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -367,8 +436,9 @@ public class RecetaUpdate extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel textBusqueda;
     private javax.swing.JTextField textDate;
+    private javax.swing.JTextField textISBNLibro;
+    private javax.swing.JTextField textId;
     private javax.swing.JTextField textName;
-    private javax.swing.JTextField textNumPags;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }

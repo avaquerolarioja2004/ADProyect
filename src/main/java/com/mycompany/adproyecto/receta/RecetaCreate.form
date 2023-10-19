@@ -51,7 +51,7 @@
                               <EmptySpace pref="222" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="textDate" max="32767" attributes="0"/>
-                                  <Component id="isVegan" min="-2" pref="277" max="-2" attributes="0"/>
+                                  <Component id="isVegana" min="-2" pref="277" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -114,7 +114,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                  <Component id="isVegan" min="-2" pref="39" max="-2" attributes="0"/>
+                  <Component id="isVegana" min="-2" pref="39" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="72" max="32767" attributes="0"/>
               <Component id="createButton" min="-2" pref="45" max="-2" attributes="0"/>
@@ -181,10 +181,10 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Georgia" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="DIGITAL"/>
+        <Property name="text" type="java.lang.String" value="VEGANA"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JToggleButton" name="isVegan">
+    <Component class="javax.swing.JToggleButton" name="isVegana">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>

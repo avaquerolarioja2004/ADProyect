@@ -33,6 +33,9 @@ public class ObjectDAOLibroRecetas implements IDAO<LibroRecetas> {
 
     @Override
     public boolean alta(LibroRecetas e) {
+        if (e == null) {
+            return false;
+        }
         File f = new File(nombre);
         try {
             if (f.length() < 1) {
@@ -53,7 +56,7 @@ public class ObjectDAOLibroRecetas implements IDAO<LibroRecetas> {
 
     @Override
     public LibroRecetas baja(LibroRecetas e) {
-        File temp = new File(nombre+"aux");
+        File temp = new File(nombre + "aux");
         File or = new File(nombre);
         LibroRecetas lr = null;
         try {
@@ -88,7 +91,7 @@ public class ObjectDAOLibroRecetas implements IDAO<LibroRecetas> {
         LibroRecetas lr = null;
         int isbn;
         File fOld = new File(nombre);
-        File fNew = new File(nombre+"aux");
+        File fNew = new File(nombre + "aux");
         try {
             in = new ObjectInputStream(new FileInputStream(fOld));
             out = new ObjectOutputStream(new FileOutputStream(fNew, true));
@@ -118,24 +121,24 @@ public class ObjectDAOLibroRecetas implements IDAO<LibroRecetas> {
 
     @Override
     public LibroRecetas consultaId(int isbn) {
-        LibroRecetas lr = null;
-        try {
-            in = new ObjectInputStream(new FileInputStream(nombre));
-            do {
-                lr = (LibroRecetas) in.readObject();
-
-            } while (isbn != lr.getIsbn());
-        } catch (EOFException exc) {
-
+        LibroRecetas outLr=null;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(nombre))) {
+            while (true) {
+                outLr = (LibroRecetas) in.readObject();
+                if (isbn == outLr.getIsbn()) {
+                    return outLr;
+                }else{
+                    outLr=null;
+                }
+            }
+        } catch (EOFException ex) {
         } catch (FileNotFoundException ex) {
+            return null;
         } catch (IOException | ClassNotFoundException ex) {
+            outLr=null;
         }
-        try {
-            in.close();
-            return lr;
-        } catch (IOException ex) {
-            return lr;
-        }
+
+        return outLr;
 
     }
 

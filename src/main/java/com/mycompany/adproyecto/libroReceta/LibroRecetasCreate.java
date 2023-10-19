@@ -7,6 +7,7 @@ package com.mycompany.adproyecto.libroReceta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.DOMDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
 import java.io.File;
@@ -30,6 +31,7 @@ public class LibroRecetasCreate extends javax.swing.JFrame {
     private File file;
     private RADAOLibroRecetas rLR;
     private final SimpleDateFormat sdf;
+    private DOMDAOLibroRecetas domLR;
 
     /**
      * Creates new form libroRecetasCreate
@@ -212,27 +214,64 @@ public class LibroRecetasCreate extends javax.swing.JFrame {
             return;
         }
         libroR = putData(libroR);
-        if(libroR==null){
+        if (libroR == null) {
             return;
         }
         switch (typeData) {
             case 'B' -> {
                 bLR = new BufferedDAOLibroRecetas(file.getAbsolutePath());
+                if (bLR.consultaId(Integer.parseInt(textIsbn.getText())) != null) {
+
+                    JOptionPane.showMessageDialog(null, "ERROR EL LIBRO DE RECETAS YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
                 bLrAdd(libroR);
             }
             case 'D' -> {
                 dLR = new BinaryDAOLibroRecetas(file.getAbsolutePath());
+                if (dLR.consultaId(Integer.parseInt(textIsbn.getText())) != null) {
+
+                    JOptionPane.showMessageDialog(null, "ERROR EL LIBRO DE RECETAS YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
                 dLrAdd(libroR);
             }
             case 'O' -> {
                 oLR = new ObjectDAOLibroRecetas(file.getAbsolutePath());
+                if (oLR.consultaId(Integer.parseInt(textIsbn.getText())) != null) {
+
+                    JOptionPane.showMessageDialog(null, "ERROR EL LIBRO DE RECETAS YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
                 oLrAdd(libroR);
             }
             case 'R' -> {
                 rLR = new RADAOLibroRecetas(file.getAbsolutePath());
+                if (rLR.consultaId(Integer.parseInt(textIsbn.getText())) != null) {
+
+                    JOptionPane.showMessageDialog(null, "ERROR EL LIBRO DE RECETAS YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
                 rLrAdd(libroR);
             }
             case 'X' -> {
+                domLR = new DOMDAOLibroRecetas(file.getAbsolutePath());
+                if (domLR.consultaId(Integer.parseInt(textIsbn.getText())) != null) {
+
+                    JOptionPane.showMessageDialog(null, "ERROR EL LIBRO DE RECETAS YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+
+                }
+                domLrAdd(libroR);
             }
         }
 
@@ -317,6 +356,11 @@ public class LibroRecetasCreate extends javax.swing.JFrame {
 
     private boolean rLrAdd(LibroRecetas libroR) {
         boolean flag = rLR.alta(libroR);
+        return mensajeCreacionLibroRecetas(flag);
+    }
+    
+    private boolean domLrAdd(LibroRecetas libroR) {
+        boolean flag = domLR.alta(libroR);
         return mensajeCreacionLibroRecetas(flag);
     }
 

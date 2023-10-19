@@ -4,8 +4,12 @@
  */
 package com.mycompany.adproyecto.receta;
 
-import com.mycompany.adproyecto.libroReceta.*;
 import com.mycompany.adproyecto.Main;
+import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.LibroRecetas;
 import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
@@ -24,13 +28,18 @@ import javax.swing.JOptionPane;
  */
 public class RecetaCreate extends javax.swing.JFrame {
 
-    private BufferedDAOReceta bLR;
-    private BinaryDAOReceta dLR;
-    private ObjectDAOReceta oLR;
+    private BufferedDAOReceta bR;
+    private BinaryDAOReceta dR;
+    private ObjectDAOReceta oR;
     private char typeData;
     private File file;
-    private RADAOReceta rLR;
+    private File fileLr;
+    private RADAOReceta rR;
     private final SimpleDateFormat sdf;
+    private BufferedDAOLibroRecetas bLR;
+    private BinaryDAOLibroRecetas dLR;
+    private ObjectDAOLibroRecetas oLR;
+    private RADAOLibroRecetas rLR;
 
     /**
      * Creates new form libroRecetasCreate
@@ -51,6 +60,10 @@ public class RecetaCreate extends javax.swing.JFrame {
         this.file = file;
     }
 
+    public void setFileLr(File file) {
+        this.fileLr = file;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -69,7 +82,7 @@ public class RecetaCreate extends javax.swing.JFrame {
         textId = new javax.swing.JTextField();
         textDate = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        isVegan = new javax.swing.JToggleButton();
+        isVegana = new javax.swing.JToggleButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         createButton = new javax.swing.JButton();
@@ -98,7 +111,7 @@ public class RecetaCreate extends javax.swing.JFrame {
         textDate.setToolTipText("");
 
         jLabel5.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        jLabel5.setText("DIGITAL");
+        jLabel5.setText("VEGANA");
 
         jLabel6.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 0, 0));
@@ -150,7 +163,7 @@ public class RecetaCreate extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(textDate)
-                                    .addComponent(isVegan, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(isVegana, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
@@ -195,7 +208,7 @@ public class RecetaCreate extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5)
-                    .addComponent(isVegan, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(isVegana, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addComponent(createButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61))
@@ -213,25 +226,85 @@ public class RecetaCreate extends javax.swing.JFrame {
             return;
         }
         receta = putData(receta);
-        if(receta==null){
+        if (receta == null) {
             return;
         }
         switch (typeData) {
             case 'B' -> {
-                bLR = new BufferedDAOReceta(file.getAbsolutePath());
-                bLrAdd(receta);
+                bR = new BufferedDAOReceta(file.getAbsolutePath());
+                bLR = new BufferedDAOLibroRecetas(fileLr.getAbsolutePath());
+                if (!textIdLibro.getText().isBlank()) {
+                    LibroRecetas lrAux = bLR.consultaId(Integer.parseInt(textIdLibro.getText()));
+                    if (lrAux == null) {
+                        JOptionPane.showMessageDialog(null, "ERROR EL ISBN DEL LIBRO NO EXISTE",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                if (bR.consultaId(Integer.parseInt(textId.getText())) != null) {
+                    JOptionPane.showMessageDialog(null, "ERROR LA RECETA YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                bRAdd(receta);
+                
             }
             case 'D' -> {
-                dLR = new BinaryDAOReceta(file.getAbsolutePath());
-                dLrAdd(receta);
+                dR = new BinaryDAOReceta(file.getAbsolutePath());
+                dLR = new BinaryDAOLibroRecetas(fileLr.getAbsolutePath());
+                if (!textIdLibro.getText().isBlank()) {
+                    LibroRecetas lrAux = dLR.consultaId(Integer.parseInt(textIdLibro.getText()));
+                    if (lrAux == null) {
+                        JOptionPane.showMessageDialog(null, "ERROR EL ISBN DEL LIBRO NO EXISTE",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                if (dR.consultaId(Integer.parseInt(textId.getText())) != null) {
+                    JOptionPane.showMessageDialog(null, "ERROR LA RECETA YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                dRAdd(receta);
+
             }
             case 'O' -> {
-                oLR = new ObjectDAOReceta(file.getAbsolutePath());
-                oLrAdd(receta);
+                
+                oR = new ObjectDAOReceta(file.getAbsolutePath());
+                oLR = new ObjectDAOLibroRecetas(fileLr.getAbsolutePath());
+                if (!textIdLibro.getText().isBlank()) {
+                    LibroRecetas lrAux = oLR.consultaId(Integer.parseInt(textIdLibro.getText()));
+                    if (lrAux == null) {
+                        JOptionPane.showMessageDialog(null, "ERROR EL ISBN DEL LIBRO NO EXISTE",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                if (oR.consultaId(Integer.parseInt(textId.getText())) != null) {
+                    JOptionPane.showMessageDialog(null, "ERROR LA RECETA YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
+                oRAdd(receta);
             }
             case 'R' -> {
-                rLR = new RADAOReceta(file.getAbsolutePath());
-                rLrAdd(receta);
+                rR = new RADAOReceta(file.getAbsolutePath());
+                rLR = new RADAOLibroRecetas(fileLr.getAbsolutePath());
+                if (!textIdLibro.getText().isBlank()) {
+                    LibroRecetas lrAux = rLR.consultaId(Integer.parseInt(textIdLibro.getText()));
+                    if (lrAux == null) {
+                        JOptionPane.showMessageDialog(null, "ERROR EL ISBN DEL LIBRO NO EXISTE",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                if (rR.consultaId(Integer.parseInt(textId.getText())) != null) {
+                    JOptionPane.showMessageDialog(null, "ERROR LA RECETA YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                rRAdd(receta);
             }
             case 'X' -> {
             }
@@ -288,12 +361,15 @@ public class RecetaCreate extends javax.swing.JFrame {
     }
 
     private Receta putData(Receta receta) {
+        int id = 0;
         receta = new Receta(Integer.parseInt(textId.getText()), textName.getText());
         receta.setNombre(textName.getText());
-        receta.setVegana(isVegan.isSelected());
-        if (textIdLibro.getText().length() >= 1) {
-            receta.setIdLibro(Integer.parseInt(textIdLibro.getText()));
+        receta.setVegana(isVegana.isSelected());
+        if (!textIdLibro.getText().isBlank()) {
+            id = Integer.parseInt(textIdLibro.getText());
         }
+        receta.setIdLibro(id);
+
         if (!textDate.getText().isEmpty()) {
             try {
                 Date d = sdf.parse(textDate.getText());
@@ -307,33 +383,33 @@ public class RecetaCreate extends javax.swing.JFrame {
         return receta;
     }
 
-    private boolean bLrAdd(Receta receta) {
-        boolean flag = bLR.alta(receta);
+    private boolean bRAdd(Receta receta) {
+        boolean flag = bR.alta(receta);
         return mensajeCreacionLibroRecetas(flag);
     }
 
-    private boolean dLrAdd(Receta receta) {
-        boolean flag = dLR.alta(receta);
+    private boolean dRAdd(Receta receta) {
+        boolean flag = dR.alta(receta);
         return mensajeCreacionLibroRecetas(flag);
     }
 
-    private boolean oLrAdd(Receta receta) {
-        boolean flag = oLR.alta(receta);
+    private boolean oRAdd(Receta receta) {
+        boolean flag = oR.alta(receta);
         return mensajeCreacionLibroRecetas(flag);
     }
 
-    private boolean rLrAdd(Receta receta) {
-        boolean flag = rLR.alta(receta);
+    private boolean rRAdd(Receta receta) {
+        boolean flag = rR.alta(receta);
         return mensajeCreacionLibroRecetas(flag);
     }
 
     private boolean mensajeCreacionLibroRecetas(boolean flag) {
         if (flag) {
-            JOptionPane.showMessageDialog(null, "INSERCIÓN DEL LIBRO DE RECETAS CORRECTA",
+            JOptionPane.showMessageDialog(null, "INSERCIÓN DE LA RECETA CORRECTA",
                     "OK", JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else {
-            JOptionPane.showMessageDialog(null, "ERROR EN LA CREACIÓN DEL LIBRO",
+            JOptionPane.showMessageDialog(null, "ERROR EN LA CREACIÓN DE LA RECETA",
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -343,7 +419,7 @@ public class RecetaCreate extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton createButton;
-    private javax.swing.JToggleButton isVegan;
+    private javax.swing.JToggleButton isVegana;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

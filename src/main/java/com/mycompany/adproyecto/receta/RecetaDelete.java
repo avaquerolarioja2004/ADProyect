@@ -20,13 +20,13 @@ import javax.swing.JOptionPane;
  * @author mrpox
  */
 public class RecetaDelete extends javax.swing.JFrame {
-    
-    private BufferedDAOReceta bLR;
-    private BinaryDAOReceta dLR;
-    private ObjectDAOReceta oLR;
+
+    private BufferedDAOReceta bR;
+    private BinaryDAOReceta dR;
+    private ObjectDAOReceta oR;
     private char typeData;
     private File file;
-    private RADAOReceta rLR;
+    private RADAOReceta rR;
     private final SimpleDateFormat sdf;
 
     /**
@@ -39,7 +39,7 @@ public class RecetaDelete extends javax.swing.JFrame {
         this.sdf.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
         this.setResizable(false);
     }
-    
+
     public void setTypeData(char typeData) {
         this.typeData = typeData;
     }
@@ -128,8 +128,7 @@ public class RecetaDelete extends javax.swing.JFrame {
 
     private void buttonBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBorrarActionPerformed
         // TODO add your handling code here:
-        
-        Receta recetaAux = null;
+        Receta recetaIn = null;
         int id;
         if (textIsbn.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "ALGUN CAMPO REQUERIDO ES INCORRECTO",
@@ -139,14 +138,13 @@ public class RecetaDelete extends javax.swing.JFrame {
         id = Integer.parseInt(textIsbn.getText());
         switch (typeData) {
             case 'B' -> {
-                bLR = new BufferedDAOReceta(file.getAbsolutePath());
-                recetaAux=bLR.consultaId(id);
-                if (recetaAux!=null) {
-                    if(bLR.baja(recetaAux)!=null){
+                bR = new BufferedDAOReceta(file.getAbsolutePath());
+                recetaIn = bR.consultaId(id);
+                if (recetaIn != null) {
+                    if (bR.baja(recetaIn) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DE LA RECETA CORRECTO",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                        
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -154,15 +152,16 @@ public class RecetaDelete extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A BORRAR NO SE HA ENCONTRADO",
                             "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
+
             }
             case 'D' -> {
-                dLR = new BinaryDAOReceta(file.getAbsolutePath());
-                recetaAux=dLR.consultaId(id);
-                if (recetaAux!=null) {
-                    if(dLR.baja(recetaAux)!=null){
+                dR = new BinaryDAOReceta(file.getAbsolutePath());
+                recetaIn = dR.consultaId(id);
+                if (recetaIn != null) {
+                    if (dR.baja(recetaIn) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DE LA RECETA CORRECTO",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -172,13 +171,13 @@ public class RecetaDelete extends javax.swing.JFrame {
                 }
             }
             case 'O' -> {
-                oLR = new ObjectDAOReceta(file.getAbsolutePath());
-                recetaAux = oLR.consultaId(id);
-                if (recetaAux!=null) {
-                    if(oLR.baja(recetaAux)!=null){
+                oR = new ObjectDAOReceta(file.getAbsolutePath());
+                recetaIn = oR.consultaId(id);
+                if (recetaIn != null) {
+                    if (oR.baja(recetaIn) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DE LA RECETA CORRECTO",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
@@ -188,13 +187,13 @@ public class RecetaDelete extends javax.swing.JFrame {
                 }
             }
             case 'R' -> {
-                rLR = new RADAOReceta(file.getAbsolutePath());
-                recetaAux = rLR.consultaId(id);
-                if (recetaAux!=null) {
-                    if(rLR.baja(recetaAux)!=null){
+                rR = new RADAOReceta(file.getAbsolutePath());
+                recetaIn = rR.consultaId(id);
+                if (recetaIn != null) {
+                    if (rR.baja(recetaIn) != null) {
                         JOptionPane.showMessageDialog(null, "BORRADO DE LA RECETA CORRECTO",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
                                 "ERROR", JOptionPane.ERROR_MESSAGE);
                     }

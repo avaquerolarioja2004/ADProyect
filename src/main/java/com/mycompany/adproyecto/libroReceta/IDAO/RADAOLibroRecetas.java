@@ -6,6 +6,7 @@ package com.mycompany.adproyecto.libroReceta.IDAO;
 
 import com.mycompany.adproyecto.IDAO.IDAO;
 import com.mycompany.adproyecto.libroReceta.LibroRecetas;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,7 +14,6 @@ import java.io.RandomAccessFile;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -37,17 +37,19 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
 
     @Override
     public boolean alta(LibroRecetas e) {
+        boolean flag = true;
         StringBuffer nombreLibroRecetas;
         StringBuffer date;
         StringBuffer digital;
+        File f = new File(name);
         try {
             raf = new RandomAccessFile(name, "rw");
-            position = raf.length();
+            position = f.length();
             raf.seek(position);
             raf.writeInt(e.getIsbn());
             nombreLibroRecetas = new StringBuffer(e.getNombre());
             nombreLibroRecetas.setLength(20);
-            raf.writeChars(nombreLibroRecetas.toString());
+            raf.writeChars(nombreLibroRecetas.toString() + "");
             raf.writeInt(e.getNumPags());
             if (e.getFechaPublicacion() != null) {
                 date = new StringBuffer(e.getFechaPublicacion().toString());
@@ -60,18 +62,19 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
             digital.setLength(20);
             raf.writeChars(digital.toString());
         } catch (FileNotFoundException ex) {
-            return false;
+            flag = false;
         } catch (IOException ex) {
-            return false;
+            flag = false;
         } catch (Exception ex) {
-            return false;
+            flag = false;
         }
         try {
             raf.close();
-            return true;
         } catch (IOException ex) {
             return false;
         }
+
+        return flag;
 
     }
 
@@ -83,12 +86,16 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
             raf.seek(position);
             raf.writeInt(-1);
         } catch (FileNotFoundException ex) {
+            return null;
         } catch (IOException ex) {
+            e = null;
         } catch (Exception ex) {
+            e = null;
         }
         try {
             raf.close();
         } catch (IOException ex) {
+            return null;
         }
         return e;
 
@@ -99,23 +106,23 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
         StringBuffer nombreLibroRecetas;
         StringBuffer date;
         StringBuffer digital;
-        File f = new File(name);
+        boolean flag = true;
+        if (consultaId(oldT.getIsbn()) == null) {
+            return false;
+        }
         try {
             raf = new RandomAccessFile(name, "rw");
-            position = oldT.getIsbn() - 1 * 248;
-            if (position > f.length()) {
-                return false;
-            }
+            position = (oldT.getIsbn() - 1) * 248;
             raf.seek(position);
             raf.writeInt(newT.getIsbn());
             nombreLibroRecetas = new StringBuffer(newT.getNombre());
             nombreLibroRecetas.setLength(20);
-            raf.writeChars(nombreLibroRecetas.toString());
+            raf.writeChars(nombreLibroRecetas.toString() + "");
             raf.writeInt(newT.getNumPags());
             if (newT.getFechaPublicacion() != null) {
                 date = new StringBuffer(newT.getFechaPublicacion().toString());
             } else {
-                date = new StringBuffer("");
+                date = new StringBuffer("vacio");
             }
             date.setLength(80);
             raf.writeChars(date.toString());
@@ -125,43 +132,43 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
         } catch (FileNotFoundException ex) {
             return false;
         } catch (IOException ex) {
-            return false;
+            flag = false;
         } catch (Exception ex) {
-            return false;
+            flag = false;
         }
         try {
             raf.close();
-            return true;
         } catch (IOException ex) {
             return false;
         }
+        return flag;
 
     }
 
     @Override
     public LibroRecetas consultaId(int id) {
-        LibroRecetas lr = null;
         File f = new File(name);
-        StringBuilder sbDate = new StringBuilder();
-        StringBuilder sbNombre = new StringBuilder();
         char[] nombreLibroRecetas = new char[20];
         char[] date = new char[80];
         char[] digital = new char[20];
         int numPags;
         Date d = null;
         int isbn;
-        
-        if(id==-1){
-            return null;
-        }
+        LibroRecetas lr = null;
 
         try {
             raf = new RandomAccessFile(f, "rw");
             for (int i = 1;; i++) {
+                StringBuilder sbDate = new StringBuilder();
+                StringBuilder sbNombre = new StringBuilder();
+                StringBuffer sbDigital = new StringBuffer();
                 position = (i - 1) * 248;
                 raf.seek(position);
                 isbn = raf.readInt();
-                if (id == isbn) {
+                if (id == -1) {
+                    return null;
+                }
+                if (isbn == id) {
                     for (int j = 0; j < nombreLibroRecetas.length; j++) {
                         nombreLibroRecetas[j] = raf.readChar();
                         sbNombre.append(nombreLibroRecetas[j]);
@@ -174,30 +181,33 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
 
                     for (int j = 0; j < digital.length; j++) {
                         digital[j] = raf.readChar();
+                        sbDigital.append(digital[j]);
                     }
 
                     lr = new LibroRecetas(isbn, sbNombre.toString());
                     lr.setNumPags(numPags);
-                    if (!sbDate.toString().equals("vacio")) {
+                    if (!sbDate.toString().contains("vacio")) {
                         d = sdf.parse(sbDate.toString());
                     }
                     lr.setFechaPublicacion(d);
-                    if (Arrays.toString(digital).equalsIgnoreCase("si")) {
+                    if (sbDigital.toString().contains("si")) {
                         lr.setDigital(true);
                     } else {
                         lr.setDigital(false);
                     }
-                    break;
                 }
 
             }
+        } catch (EOFException eofx) {
         } catch (FileNotFoundException ex) {
+            return null;
         } catch (IOException | ParseException ex) {
+            lr = null;
         }
         try {
             raf.close();
         } catch (IOException ex) {
-
+            lr = null;
         }
         return lr;
     }
@@ -211,6 +221,7 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
         int numPags;
         Date d = null;
         int isbn;
+        LibroRecetas lr;
         ArrayList<LibroRecetas> lista = new ArrayList<>();
 
         try {
@@ -218,6 +229,7 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
             for (int i = 1;; i++) {
                 StringBuilder sbDate = new StringBuilder();
                 StringBuilder sbNombre = new StringBuilder();
+                StringBuffer sbDigital = new StringBuffer();
                 position = (i - 1) * 248;
                 raf.seek(position);
                 isbn = raf.readInt();
@@ -234,15 +246,16 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
 
                     for (int j = 0; j < digital.length; j++) {
                         digital[j] = raf.readChar();
+                        sbDigital.append(digital[j]);
                     }
 
-                    LibroRecetas lr = new LibroRecetas(isbn, sbNombre.toString());
+                    lr = new LibroRecetas(isbn, sbNombre.toString());
                     lr.setNumPags(numPags);
-                    if (!sbDate.toString().equals("vacio")) {
+                    if (!sbDate.toString().contains("vacio")) {
                         d = sdf.parse(sbDate.toString());
                     }
                     lr.setFechaPublicacion(d);
-                    if (Arrays.toString(digital).equalsIgnoreCase("si")) {
+                    if (sbDigital.toString().contains("si")) {
                         lr.setDigital(true);
                     } else {
                         lr.setDigital(false);
@@ -252,13 +265,16 @@ public class RADAOLibroRecetas implements IDAO<LibroRecetas> {
                 }
 
             }
+        } catch (EOFException eofx) {
         } catch (FileNotFoundException ex) {
+            return null;
         } catch (IOException | ParseException ex) {
+            lista = null;
         }
         try {
             raf.close();
         } catch (IOException ex) {
-
+            lista = null;
         }
         return lista;
     }

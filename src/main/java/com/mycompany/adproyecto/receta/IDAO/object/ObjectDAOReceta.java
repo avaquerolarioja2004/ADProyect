@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  */
 public class ObjectDAOReceta implements IDAO<Receta> {
 
-    private String nombre;
+    private final String nombre;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private MyObjectBin myOut;
@@ -33,7 +35,10 @@ public class ObjectDAOReceta implements IDAO<Receta> {
 
     @Override
     public boolean alta(Receta e) {
-        boolean flag=true;
+        if (e == null) {
+            return false;
+        }
+        boolean flag = true;
         File f = new File(nombre);
         try {
             if (f.length() < 1) {
@@ -53,7 +58,7 @@ public class ObjectDAOReceta implements IDAO<Receta> {
 
     @Override
     public Receta baja(Receta e) {
-        File temp = new File(nombre+"aux");
+        File temp = new File(nombre + "aux");
         File or = new File(nombre);
         Receta outR = null;
         try {
@@ -70,7 +75,7 @@ public class ObjectDAOReceta implements IDAO<Receta> {
         } catch (FileNotFoundException ex) {
             return null;
         } catch (IOException | ClassNotFoundException ex) {
-            outR=null;
+            outR = null;
         }
         try {
             in.close();
@@ -78,7 +83,7 @@ public class ObjectDAOReceta implements IDAO<Receta> {
             or.delete();
             temp.renameTo(or);
         } catch (IOException ex) {
-            outR=null;
+            outR = null;
         }
         return outR;
 
@@ -86,11 +91,11 @@ public class ObjectDAOReceta implements IDAO<Receta> {
 
     @Override
     public boolean modificar(Receta oldT, Receta newT) {
-        boolean flag=true;
+        boolean flag = true;
         Receta auxR = null;
         int id;
         File fOld = new File(nombre);
-        File fNew = new File(nombre+"aux");
+        File fNew = new File(nombre + "aux");
         try {
             in = new ObjectInputStream(new FileInputStream(fOld));
             out = new ObjectOutputStream(new FileOutputStream(fNew, true));
@@ -105,7 +110,7 @@ public class ObjectDAOReceta implements IDAO<Receta> {
             }
         } catch (EOFException eof) {
         } catch (IOException | ClassNotFoundException ioe) {
-            flag=false;
+            flag = false;
         }
         try {
             out.close();
@@ -113,60 +118,48 @@ public class ObjectDAOReceta implements IDAO<Receta> {
             fOld.delete();
             fNew.renameTo(fOld);
         } catch (IOException exc) {
-            flag=false;
+            flag = false;
         }
-        
+
         return flag;
 
     }
 
     @Override
     public Receta consultaId(int id) {
-        Receta out = null;
-        try {
-            in = new ObjectInputStream(new FileInputStream(nombre));
-            do {
-                out = (Receta) in.readObject();
-
-            } while (id != out.getIdReceta());
-        } catch (EOFException exc) {
-
+        Receta outR=null;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(nombre))) {
+            while (true) {
+                outR = (Receta) in.readObject();
+                if (outR.getIdReceta() == id) {
+                    return outR;
+                }else{
+                    outR=null;
+                }
+            }
         } catch (FileNotFoundException ex) {
             return null;
         } catch (IOException | ClassNotFoundException ex) {
-            out=null;
         }
-        try {
-            in.close();
-        } catch (IOException ex) {
-            out=null;
-        }
-        return out;
+        
+        return outR;
 
     }
 
     @Override
     public ArrayList<Receta> consultaAll() {
-        Receta out = null;
         ArrayList<Receta> lista = new ArrayList<>();
-        try {
-            in = new ObjectInputStream(new FileInputStream(nombre));
-            do {
-                out = (Receta) in.readObject();
-                lista.add(out);
-            } while (true);
-        } catch (EOFException exc) {
-
+        Receta outR=null;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(nombre))) {
+            while (true) {
+                outR = (Receta) in.readObject();
+                lista.add(outR);
+            }
         } catch (FileNotFoundException ex) {
             return null;
         } catch (IOException | ClassNotFoundException ex) {
-            lista=null;
         }
-        try {
-            in.close();
-        } catch (IOException ex) {
-            lista=null;
-        }
+        
         return lista;
 
     }

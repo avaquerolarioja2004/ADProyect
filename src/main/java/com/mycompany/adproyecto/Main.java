@@ -8,6 +8,10 @@ import com.mycompany.adproyecto.libroReceta.LibroRecetasCreate;
 import com.mycompany.adproyecto.libroReceta.LibroRecetasDelete;
 import com.mycompany.adproyecto.libroReceta.LibroRecetasRead;
 import com.mycompany.adproyecto.libroReceta.LibroRecetasUpdate;
+import com.mycompany.adproyecto.receta.RecetaCreate;
+import com.mycompany.adproyecto.receta.RecetaDelete;
+import com.mycompany.adproyecto.receta.RecetaRead;
+import com.mycompany.adproyecto.receta.RecetaUpdate;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -127,7 +131,12 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (CRUD.getSelectedItem().equals("Create")) {
             if (isReceta()) {
-
+                RecetaCreate rCreate=new RecetaCreate();
+                rCreate.setVisible(true);
+                setVisible(false);
+                rCreate.setTypeData(setFileFromTipoGuardado());
+                rCreate.setFile(fileReceta);
+                rCreate.setFileLr(fileLibroReceta);
             } else {
                 LibroRecetasCreate lrCreate=new LibroRecetasCreate();
                 lrCreate.setVisible(true);
@@ -137,7 +146,11 @@ public class Main extends javax.swing.JFrame {
             }
         } else if (CRUD.getSelectedItem().equals("Read")) {
             if (isReceta()) {
-
+                RecetaRead rRead=new RecetaRead();
+                rRead.setVisible(true);
+                setVisible(false);
+                rRead.setTypeData(setFileFromTipoGuardado());
+                rRead.setFile(fileReceta);
             } else {
                 LibroRecetasRead lrRead=new LibroRecetasRead();
                 lrRead.setVisible(true);
@@ -147,6 +160,12 @@ public class Main extends javax.swing.JFrame {
             }
         } else if (CRUD.getSelectedItem().equals("Update")) {
             if (isReceta()) {
+                RecetaUpdate rUpdate=new RecetaUpdate();
+                rUpdate.setVisible(true);
+                setVisible(false);
+                rUpdate.setTypeData(setFileFromTipoGuardado());
+                rUpdate.setFile(fileReceta);
+                rUpdate.setFileLr(fileLibroReceta);
 
             } else {
                 LibroRecetasUpdate lrUpdate=new LibroRecetasUpdate();
@@ -157,13 +176,18 @@ public class Main extends javax.swing.JFrame {
             }
         } else { //Delete
             if (isReceta()) {
-
+                RecetaDelete rDelete=new RecetaDelete();
+                rDelete.setVisible(true);
+                setVisible(false);
+                rDelete.setTypeData(setFileFromTipoGuardado());
+                rDelete.setFile(fileReceta);
             } else {
                 LibroRecetasDelete lrDelete=new LibroRecetasDelete();
                 lrDelete.setVisible(true);
                 setVisible(false);
                 lrDelete.setTypeData(setFileFromTipoGuardado());
                 lrDelete.setFile(fileLibroReceta);
+                lrDelete.setFileR(fileReceta);
             }
         }
     }//GEN-LAST:event_sendButtonActionPerformed
@@ -220,14 +244,14 @@ public class Main extends javax.swing.JFrame {
             fileReceta = new File("src\\main\\java\\com\\mycompany\\adproyecto\\Files\\recetaX.xml");
             retChar= 'X';
         }
-        if (!fileLibroReceta.exists()) {
+        if (!fileLibroReceta.exists()&&retChar!='X') {
             try {
                 fileLibroReceta.createNewFile();
             } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        if (!fileReceta.exists()) {
+        if (!fileReceta.exists()&&retChar!='X') {
             try {
                 fileReceta.createNewFile();
             } catch (IOException ex) {

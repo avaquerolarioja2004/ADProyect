@@ -67,10 +67,16 @@ public class Receta implements Serializable{
     public int getIdLibro() {
         return idLibro;
     }
+    
+    public boolean isVegana() {
+        return vegana;
+    }
 
     @Override
     public String toString() {
         return "RECETA:\nId: "+this.idReceta+"\nNombre: "+this.nombre+"\nFecha de su invención: "+this.fechInvención+"\nVegana: "+this.getVegana()+"\nId del libro: "+this.idLibro;
     }
+
+    
     
 }

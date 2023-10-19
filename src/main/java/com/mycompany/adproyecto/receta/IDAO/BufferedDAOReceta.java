@@ -37,7 +37,7 @@ public class BufferedDAOReceta implements IDAO<Receta> {
         try {
             bw = new BufferedWriter(new FileWriter(nombre, true));
             String reg;
-            reg = e.getIdReceta() + ";" + e.getNombre() + ";" + e.getIdLibro() + ";" + e.getFechInvención().toString() + ";" + e.getVegana();
+            reg = e.getIdReceta() + ";" + e.getNombre() + ";" + e.getIdLibro() + ";" + e.getFechInvención() + ";" + e.getVegana();
             bw.write(reg);
             bw.newLine();
         } catch (IOException ex) {
@@ -67,7 +67,7 @@ public class BufferedDAOReceta implements IDAO<Receta> {
             while ((linea = br.readLine()) != null) {
                 receta = linea.split(";");
                 id = Integer.parseInt(receta[0]);
-                if (e.getIdLibro() != id) {
+                if (e.getIdReceta()!= id) {
                     bw.write(linea);
                     bw.newLine();
                 } else {

@@ -35,7 +35,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="textNumPags" min="-2" pref="277" max="-2" attributes="0"/>
+                              <Component id="textISBNLibro" min="-2" pref="277" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -45,7 +45,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="textBusqueda" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="isbn" min="-2" pref="70" max="-2" attributes="0"/>
+                              <Component id="textId" min="-2" pref="70" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="207" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -53,10 +53,10 @@
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="246" max="32767" attributes="0"/>
+                              <EmptySpace pref="281" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="textDate" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="isDigitalorNot" alignment="0" pref="277" max="32767" attributes="0"/>
+                                  <Component id="isVegana" alignment="0" pref="277" max="32767" attributes="0"/>
                                   <Component id="updateButton" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -77,7 +77,7 @@
               <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="textBusqueda" alignment="3" min="-2" pref="70" max="-2" attributes="0"/>
-                  <Component id="isbn" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
+                  <Component id="textId" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -95,7 +95,7 @@
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="textNumPags" min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="textISBNLibro" min="-2" pref="34" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="textDate" min="-2" pref="34" max="-2" attributes="0"/>
                   </Group>
@@ -103,7 +103,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="isDigitalorNot" alignment="1" min="-2" pref="39" max="-2" attributes="0"/>
+                  <Component id="isVegana" alignment="1" min="-2" pref="39" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
               <Component id="updateButton" min="-2" pref="48" max="-2" attributes="0"/>
@@ -126,10 +126,10 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Georgia" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="ISBN del Libro a  Editar:"/>
+        <Property name="text" type="java.lang.String" value="ID del Libro a  Editar:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="isbn">
+    <Component class="javax.swing.JTextField" name="textId">
     </Component>
     <Component class="javax.swing.JTextField" name="textName">
       <Properties>
@@ -149,10 +149,10 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Georgia" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="N&#xda;MERO DE P&#xc1;GINAS"/>
+        <Property name="text" type="java.lang.String" value="ISBN DEL LIBRO"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="textNumPags">
+    <Component class="javax.swing.JTextField" name="textISBNLibro">
       <Properties>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
@@ -162,7 +162,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Georgia" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="FECHA DE PUBLICACI&#xd3;N"/>
+        <Property name="text" type="java.lang.String" value="FECHA DE CREACI&#xd3;N"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="textDate">
@@ -175,10 +175,10 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Georgia" size="18" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="DIGITAL"/>
+        <Property name="text" type="java.lang.String" value="VEGANA"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JToggleButton" name="isDigitalorNot">
+    <Component class="javax.swing.JToggleButton" name="isVegana">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>

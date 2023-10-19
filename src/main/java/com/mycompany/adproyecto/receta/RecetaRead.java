@@ -172,7 +172,7 @@ public class RecetaRead extends javax.swing.JFrame {
             list.setModel(nuevoModelo);
             list.repaint();
         }
-        String date = "";
+        String date = "null";
         Receta out = null;
         int idIntroducido;
         if (this.id.getText().equals("")) {
@@ -225,7 +225,7 @@ public class RecetaRead extends javax.swing.JFrame {
     private void buscarButtonAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonAllActionPerformed
         // TODO add your handling code here:
         ArrayList<Receta> listaR = null;
-        String date = "";
+        String date;
         DefaultListModel<String> nuevoModelo = new DefaultListModel<>();
         if (file.length() < 1) {
             nuevoModelo.addElement("ARCHIVO VACIO");
@@ -261,7 +261,7 @@ public class RecetaRead extends javax.swing.JFrame {
             nuevoModelo.addElement("No hay elementos o hubo un error");
         } else {
             for (Receta out : listaR) {
-                date="";
+                date="null";
                 nuevoModelo.addElement("Libro Recetas:");
                 nuevoModelo.addElement("ID: " + out.getIdReceta());
                 nuevoModelo.addElement("Nombre: " + out.getNombre());

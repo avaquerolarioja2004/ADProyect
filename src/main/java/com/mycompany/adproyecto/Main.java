@@ -12,10 +12,12 @@ import com.mycompany.adproyecto.receta.RecetaCreate;
 import com.mycompany.adproyecto.receta.RecetaDelete;
 import com.mycompany.adproyecto.receta.RecetaRead;
 import com.mycompany.adproyecto.receta.RecetaUpdate;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 
 
@@ -27,14 +29,25 @@ public class Main extends javax.swing.JFrame {
 
     File fileReceta;
     File fileLibroReceta;
+    BufferedImage icono;
 
     /**
      * Creates new form Main
      */
     public Main() {
+        super("MAIN");
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        
+        try {
+            icono = ImageIO.read(new File("src\\main\\java\\com\\mycompany\\adproyecto\\icon\\save.png"));
+        } catch (IOException e) {
+        }
+
+        if (icono != null) {
+            setIconImage(icono);
+        }
     }
 
     /**
@@ -137,12 +150,14 @@ public class Main extends javax.swing.JFrame {
                 rCreate.setTypeData(setFileFromTipoGuardado());
                 rCreate.setFile(fileReceta);
                 rCreate.setFileLr(fileLibroReceta);
+                rCreate.setIconImage(icono);
             } else {
                 LibroRecetasCreate lrCreate=new LibroRecetasCreate();
                 lrCreate.setVisible(true);
                 setVisible(false);
                 lrCreate.setTypeData(setFileFromTipoGuardado());
                 lrCreate.setFile(fileLibroReceta);
+                lrCreate.setIconImage(icono);
             }
         } else if (CRUD.getSelectedItem().equals("Read")) {
             if (isReceta()) {
@@ -151,12 +166,14 @@ public class Main extends javax.swing.JFrame {
                 setVisible(false);
                 rRead.setTypeData(setFileFromTipoGuardado());
                 rRead.setFile(fileReceta);
+                rRead.setIconImage(icono);
             } else {
                 LibroRecetasRead lrRead=new LibroRecetasRead();
                 lrRead.setVisible(true);
                 setVisible(false);
                 lrRead.setTypeData(setFileFromTipoGuardado());
                 lrRead.setFile(fileLibroReceta);
+                lrRead.setIconImage(icono);
             }
         } else if (CRUD.getSelectedItem().equals("Update")) {
             if (isReceta()) {
@@ -166,13 +183,14 @@ public class Main extends javax.swing.JFrame {
                 rUpdate.setTypeData(setFileFromTipoGuardado());
                 rUpdate.setFile(fileReceta);
                 rUpdate.setFileLr(fileLibroReceta);
-
+                rUpdate.setIconImage(icono);
             } else {
                 LibroRecetasUpdate lrUpdate=new LibroRecetasUpdate();
                 lrUpdate.setVisible(true);
                 setVisible(false);
                 lrUpdate.setTypeData(setFileFromTipoGuardado());
                 lrUpdate.setFile(fileLibroReceta);
+                lrUpdate.setIconImage(icono);
             }
         } else { //Delete
             if (isReceta()) {
@@ -181,6 +199,7 @@ public class Main extends javax.swing.JFrame {
                 setVisible(false);
                 rDelete.setTypeData(setFileFromTipoGuardado());
                 rDelete.setFile(fileReceta);
+                rDelete.setIconImage(icono);
             } else {
                 LibroRecetasDelete lrDelete=new LibroRecetasDelete();
                 lrDelete.setVisible(true);
@@ -188,6 +207,7 @@ public class Main extends javax.swing.JFrame {
                 lrDelete.setTypeData(setFileFromTipoGuardado());
                 lrDelete.setFile(fileLibroReceta);
                 lrDelete.setFileR(fileReceta);
+                lrDelete.setIconImage(icono);
             }
         }
     }//GEN-LAST:event_sendButtonActionPerformed

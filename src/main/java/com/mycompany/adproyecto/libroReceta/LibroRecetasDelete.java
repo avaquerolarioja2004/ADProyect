@@ -48,6 +48,7 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
      * Creates new form LibroRecetasDelete
      */
     public LibroRecetasDelete() {
+        super("LIBRO DE RECETAS DELETE");
         initComponents();
         this.setLocationRelativeTo(null);
         this.sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
@@ -153,6 +154,11 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
         int isbnNum;
         if (textIsbn.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "ALGUN CAMPO REQUERIDO ES INCORRECTO",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!textIsbn.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ISBN",
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -275,13 +281,13 @@ public class LibroRecetasDelete extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "BORRADO DEL LIBRO DE RECETAS CORRECTA",
                                 "OK", JOptionPane.INFORMATION_MESSAGE);
                         if (fileR.length() > 0) {
-                            listaRecetas = rR.consultaAll();
+                            listaRecetas = domR.consultaAll();
 
                             for (Receta next : listaRecetas) {
                                 if (next.getIdReceta() == isbnNum) {
                                     auxUpdate = next;
                                     auxUpdate.setIdLibro(0);
-                                    rR.modificar(next, auxUpdate);
+                                    domR.modificar(next, auxUpdate);
                                 }
                             }
                         }

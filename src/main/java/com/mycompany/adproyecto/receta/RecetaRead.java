@@ -7,11 +7,13 @@ package com.mycompany.adproyecto.receta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.DOMDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,11 +27,13 @@ public class RecetaRead extends javax.swing.JFrame {
     private char typeData;
     private File file;
     private RADAOReceta rR;
+    private DOMDAOReceta domR;
 
     /**
      * Creates new form LibroRecetasRead
      */
     public RecetaRead() {
+        super("RECETA READ");
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -162,6 +166,11 @@ public class RecetaRead extends javax.swing.JFrame {
 
     private void buscarButtonIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonIDActionPerformed
         // TODO add your handling code here:
+        if (!id.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ID",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         DefaultListModel<String> nuevoModelo = new DefaultListModel<>();
         if (file.length() < 1) {
             nuevoModelo.addElement("ARCHIVO VACIO");
@@ -198,6 +207,8 @@ public class RecetaRead extends javax.swing.JFrame {
                 out = rR.consultaId(idIntroducido);
             }
             case 'X' -> {
+                domR = new DOMDAOReceta(file.getAbsolutePath());
+                out = domR.consultaId(idIntroducido);
             }
         }
         nuevoModelo = new DefaultListModel<>();
@@ -254,6 +265,8 @@ public class RecetaRead extends javax.swing.JFrame {
                 listaR = rR.consultaAll();
             }
             case 'X' -> {
+                domR = new DOMDAOReceta(file.getAbsolutePath());
+                listaR = domR.consultaAll();
             }
         }
         nuevoModelo.clear();

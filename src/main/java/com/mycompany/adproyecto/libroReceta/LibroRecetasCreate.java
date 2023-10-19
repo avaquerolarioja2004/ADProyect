@@ -37,6 +37,7 @@ public class LibroRecetasCreate extends javax.swing.JFrame {
      * Creates new form libroRecetasCreate
      */
     public LibroRecetasCreate() {
+        super("LIBRO DE RECETAS CREATE");
         initComponents();
         this.setLocationRelativeTo(null);
         this.sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
@@ -213,6 +214,19 @@ public class LibroRecetasCreate extends javax.swing.JFrame {
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        if (!textIsbn.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ISBN",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!textNumPags.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO NÚMERO DE PÁGINAS",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         libroR = putData(libroR);
         if (libroR == null) {
             return;
@@ -358,7 +372,7 @@ public class LibroRecetasCreate extends javax.swing.JFrame {
         boolean flag = rLR.alta(libroR);
         return mensajeCreacionLibroRecetas(flag);
     }
-    
+
     private boolean domLrAdd(LibroRecetas libroR) {
         boolean flag = domLR.alta(libroR);
         return mensajeCreacionLibroRecetas(flag);

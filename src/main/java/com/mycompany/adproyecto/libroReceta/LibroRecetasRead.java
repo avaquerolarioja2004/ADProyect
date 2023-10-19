@@ -13,6 +13,7 @@ import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -32,6 +33,7 @@ public class LibroRecetasRead extends javax.swing.JFrame {
      * Creates new form LibroRecetasRead
      */
     public LibroRecetasRead() {
+        super("LIBRO DE RECETAS READ");
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -164,6 +166,11 @@ public class LibroRecetasRead extends javax.swing.JFrame {
 
     private void buscarButtonISBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonISBNActionPerformed
         // TODO add your handling code here:
+        if (!isbn.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ISBN",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         DefaultListModel<String> nuevoModelo = new DefaultListModel<>();
         if (file.length() < 1) {
             nuevoModelo.addElement("ARCHIVO VACIO");

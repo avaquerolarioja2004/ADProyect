@@ -7,6 +7,7 @@ package com.mycompany.adproyecto.receta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.DOMDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
 import java.io.File;
@@ -28,11 +29,13 @@ public class RecetaDelete extends javax.swing.JFrame {
     private File file;
     private RADAOReceta rR;
     private final SimpleDateFormat sdf;
+    private DOMDAOReceta domR;
 
     /**
      * Creates new form LibroRecetasDelete
      */
     public RecetaDelete() {
+        super("RECETA DELETE");
         initComponents();
         this.setLocationRelativeTo(null);
         this.sdf = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
@@ -58,7 +61,7 @@ public class RecetaDelete extends javax.swing.JFrame {
     private void initComponents() {
 
         backButton = new javax.swing.JButton();
-        textIsbn = new javax.swing.JTextField();
+        textId = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         buttonBorrar = new javax.swing.JButton();
 
@@ -71,10 +74,10 @@ public class RecetaDelete extends javax.swing.JFrame {
             }
         });
 
-        textIsbn.setToolTipText("");
+        textId.setToolTipText("");
 
         jLabel1.setFont(new java.awt.Font("Georgia", 1, 18)); // NOI18N
-        jLabel1.setText("ISBN del Libro de Recetas a borrar:");
+        jLabel1.setText("ID de la Receta a borrar:");
 
         buttonBorrar.setText("BORRAR");
         buttonBorrar.addActionListener(new java.awt.event.ActionListener() {
@@ -98,9 +101,9 @@ public class RecetaDelete extends javax.swing.JFrame {
                             .addComponent(buttonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addGap(30, 30, 30)
-                                .addComponent(textIsbn, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(278, Short.MAX_VALUE))
+                                .addGap(81, 81, 81)
+                                .addComponent(textId, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(331, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +113,7 @@ public class RecetaDelete extends javax.swing.JFrame {
                 .addGap(115, 115, 115)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(textIsbn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textId, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(109, 109, 109)
                 .addComponent(buttonBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(177, Short.MAX_VALUE))
@@ -130,12 +133,17 @@ public class RecetaDelete extends javax.swing.JFrame {
         // TODO add your handling code here:
         Receta recetaIn = null;
         int id;
-        if (textIsbn.getText().isEmpty()) {
+        if (textId.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "ALGUN CAMPO REQUERIDO ES INCORRECTO",
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        id = Integer.parseInt(textIsbn.getText());
+        if (!textId.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ID",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        id = Integer.parseInt(textId.getText());
         switch (typeData) {
             case 'B' -> {
                 bR = new BufferedDAOReceta(file.getAbsolutePath());
@@ -203,6 +211,20 @@ public class RecetaDelete extends javax.swing.JFrame {
                 }
             }
             case 'X' -> {
+                domR = new DOMDAOReceta(file.getAbsolutePath());
+                recetaIn = domR.consultaId(id);
+                if (recetaIn != null) {
+                    if (domR.baja(recetaIn) != null) {
+                        JOptionPane.showMessageDialog(null, "BORRADO DE LA RECETA CORRECTO",
+                                "OK", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "ERROR EN EL BORRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A BORRAR NO SE HA ENCONTRADO",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_buttonBorrarActionPerformed
@@ -247,6 +269,6 @@ public class RecetaDelete extends javax.swing.JFrame {
     private javax.swing.JButton backButton;
     private javax.swing.JButton buttonBorrar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField textIsbn;
+    private javax.swing.JTextField textId;
     // End of variables declaration//GEN-END:variables
 }

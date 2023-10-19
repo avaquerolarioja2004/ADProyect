@@ -8,10 +8,12 @@ import com.mycompany.adproyecto.libroReceta.*;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.DOMDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
 import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.DOMDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
 import java.io.File;
@@ -40,11 +42,14 @@ public class RecetaUpdate extends javax.swing.JFrame {
     private BinaryDAOLibroRecetas dLR;
     private ObjectDAOLibroRecetas oLR;
     private RADAOLibroRecetas rLR;
+    private DOMDAOLibroRecetas domLR;
+    private DOMDAOReceta domR;
 
     /**
      * Creates new form LibroRecetaUpdateç
      */
     public RecetaUpdate() {
+        super("RECETA UPDATE");
         initComponents();
         this.setLocationRelativeTo(null);
         this.sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
@@ -221,6 +226,19 @@ public class RecetaUpdate extends javax.swing.JFrame {
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        if (!textId.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ID",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!textISBNLibro.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ID LIBRO",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         id = Integer.parseInt(textId.getText());
 
         switch (typeData) {
@@ -350,6 +368,35 @@ public class RecetaUpdate extends javax.swing.JFrame {
                 }
             }
             case 'X' -> {
+                domR = new DOMDAOReceta(file.getAbsolutePath());
+                domLR = new DOMDAOLibroRecetas(fileLr.getAbsolutePath());
+                
+                if (!textISBNLibro.getText().isBlank()) {
+                    libroRAux = domLR.consultaId(Integer.parseInt(textISBNLibro.getText()));
+                    
+                    if (libroRAux == null) {
+                        JOptionPane.showMessageDialog(null, "EL ISBN DEL LIBRO NO SE HA ENCONTRADO",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                }
+                recetaIn = domR.consultaId(id);
+                if (recetaIn != null) {
+                    recetaAux = putData(recetaAux);
+                    if (domR.modificar(recetaIn, recetaAux)) {
+                        JOptionPane.showMessageDialog(null, "ACTUALIZACIÓN DE LA RECETA CORRECTA",
+                                "OK", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "ERROR EN LA ACTUALIZACIÓN",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "EL ID DE LA RECETA A ACTUALIZAR NO SE HA ENCONTRADO",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
         }
     }//GEN-LAST:event_updateButtonActionPerformed

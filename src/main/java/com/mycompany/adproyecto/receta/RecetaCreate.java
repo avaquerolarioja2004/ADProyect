@@ -7,11 +7,13 @@ package com.mycompany.adproyecto.receta;
 import com.mycompany.adproyecto.Main;
 import com.mycompany.adproyecto.libroReceta.IDAO.BinaryDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.BufferedDAOLibroRecetas;
+import com.mycompany.adproyecto.libroReceta.IDAO.DOMDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.RADAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.IDAO.object.ObjectDAOLibroRecetas;
 import com.mycompany.adproyecto.libroReceta.LibroRecetas;
 import com.mycompany.adproyecto.receta.IDAO.BinaryDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.BufferedDAOReceta;
+import com.mycompany.adproyecto.receta.IDAO.DOMDAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.RADAOReceta;
 import com.mycompany.adproyecto.receta.IDAO.object.ObjectDAOReceta;
 import java.io.File;
@@ -40,11 +42,14 @@ public class RecetaCreate extends javax.swing.JFrame {
     private BinaryDAOLibroRecetas dLR;
     private ObjectDAOLibroRecetas oLR;
     private RADAOLibroRecetas rLR;
+    private DOMDAOLibroRecetas domLR;
+    private DOMDAOReceta domR;
 
     /**
      * Creates new form libroRecetasCreate
      */
     public RecetaCreate() {
+        super("RECETA CREATE");
         initComponents();
         this.setLocationRelativeTo(null);
         this.sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
@@ -225,6 +230,19 @@ public class RecetaCreate extends javax.swing.JFrame {
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
+        if (!textId.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ID",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!textIdLibro.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ID LIBRO",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         receta = putData(receta);
         if (receta == null) {
             return;
@@ -307,6 +325,22 @@ public class RecetaCreate extends javax.swing.JFrame {
                 rRAdd(receta);
             }
             case 'X' -> {
+                domR = new DOMDAOReceta(file.getAbsolutePath());
+                domLR = new DOMDAOLibroRecetas(fileLr.getAbsolutePath());
+                if (!textIdLibro.getText().isBlank()) {
+                    LibroRecetas lrAux = domLR.consultaId(Integer.parseInt(textIdLibro.getText()));
+                    if (lrAux == null) {
+                        JOptionPane.showMessageDialog(null, "ERROR EL ISBN DEL LIBRO NO EXISTE",
+                                "ERROR", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                if (domR.consultaId(Integer.parseInt(textId.getText())) != null) {
+                    JOptionPane.showMessageDialog(null, "ERROR LA RECETA YA EXISTE EXISTE",
+                            "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                domRAdd(receta);
             }
         }
 
@@ -400,6 +434,11 @@ public class RecetaCreate extends javax.swing.JFrame {
 
     private boolean rRAdd(Receta receta) {
         boolean flag = rR.alta(receta);
+        return mensajeCreacionLibroRecetas(flag);
+    }
+    
+    private boolean domRAdd(Receta receta) {
+        boolean flag = domR.alta(receta);
         return mensajeCreacionLibroRecetas(flag);
     }
 

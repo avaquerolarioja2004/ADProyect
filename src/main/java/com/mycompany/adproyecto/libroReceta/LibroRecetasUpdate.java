@@ -37,6 +37,7 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
      * Creates new form LibroRecetaUpdateç
      */
     public LibroRecetasUpdate() {
+        super("LIBRO DE RECETAS UPDATE");
         initComponents();
         this.setLocationRelativeTo(null);
         this.sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
@@ -205,6 +206,17 @@ public class LibroRecetasUpdate extends javax.swing.JFrame {
         int isbnNum;
         if (isbn.getText().isEmpty() || textName.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "ALGUN CAMPO REQUERIDO ES INCORRECTO",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!isbn.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO ISBN",
+                    "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!textNumPags.getText().matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "SOLO SE ACEPTA VALOR NUMÉRICO EN EL CAMPO NÚMERO DE PÁGINAS",
                     "ERROR", JOptionPane.ERROR_MESSAGE);
             return;
         }
